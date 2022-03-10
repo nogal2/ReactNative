@@ -1,0 +1,106 @@
+scoop 설정
+
+Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+$env:SCOOP='C:\Scoop'
+환경변수 설정
+iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+scoop install nodejs-lts
+scoop install git
+scoop bucket add java
+scoop install adopt8-hotspot
+scoop bucket add extras
+scoop install vscode
+./install-context.reg
+scoop install android-studio android-sdk
+
+vscode 설정
+npm install -g create-react-native-app
+create-react-native-app first-project
+
+
+npx react-native run-android
+
+npm install --dev react-native-typescript-transformer typescript		타입스크립트로 맞춰놓기.
+npx react-native init ch04_1 --template react-native-template-typescript
+이 상태로 프로젝트 생성
+
+selectPicker 설정
+npm install react-native-picker-select
+npm install @react-native-picker/picker
+npm install watcher
+import RNPickerSelect from 'react-native-picker-select'
+
+
+npm install react-native-svg@9
+npm i react-native-multi-selectbox-typescript
+import { xorBy } from 'lodash'
+
+
+
+npm i react-native-flexi-radio-button --save
+
+체크박스
+npm i react-native-paper
+
+아이콘 추가 
+프로젝트-> android -> app -> build.gradle
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
+아이콘 사이트
+https://oblador.github.io/react-native-vector-icons/
+
+
+구글 머티리얼 색상 패키지 설치.
+npm i react-native-vector-icons react-native-paper
+
+색을 정할때 유용한 패키지 (리액트 네이티브 앱프로그래밍 p111)
+
+npm i color
+
+위에 두개 합칠수 있음.
+npm i react-native-vector-icons react-native-paper color
+
+npm i -D @types/color
+
+아이콘
+npm i -D @types/react-native-vector-icons
+npx react-native link react-native-vector-icons
+
+폰트 링크 하기
+npx react-native link
+
+화면전환
+npm install react-native-gesture-handler
+npm install @react-navigation/native
+npm install @react-navigation/bottom-tabs
+npm install react-native-safe-area-context
+npm install react-native-screens
+npm i -D @types/react-native-vector-icons
+
+android -> app -> build gradle -> 
+project.ext.react = [
+    enableHermes: false,  // clean and rebuild if changing
+]
+이거 아래(80행쯤있음)
+project.ext.vectoricons = [
+  iconFontNames: [ 'Ionicons.ttf', 'FontAwesome.ttf' ]
+]
+이거 넣기
+
+그리고 맨 아래
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+이거 넣기.
+
+
+npm install react-native-gesture-handler
+npm install @react-navigation/native
+npm install @react-navigation/native-stack
+npm install react-native-safe-area-context
+npm install react-native-screens
+npm install watcher
+
+npm i react-native-vector-icons react-native-paper color
+npm i -D @types/react-native-vector-icons @types/color
+npx react-native link react-native-vector-icons
+npx pod-install
+npm i moment moment-with-locales-es6
