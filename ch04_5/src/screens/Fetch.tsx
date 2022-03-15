@@ -2,27 +2,27 @@ import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { Colors } from "react-native-paper";
 import * as D from '../data'
+import { useAsync } from "../hooks";
 import Country from "./Country";
 
 export default function Fetch() {
     const[countries, setCountries] = useState<D.ICountry[]>([])
-    
-    const [error, setError] = useState<Error | null>(null)
-    console.log('Fetch')
-    useEffect (() => {
-        console.log('Fetch useEffet')
-        D.getCountries().then(setCountries).catch(setError)
-        /* D.getCountries().then(countries => 
-            setCountries(countries)).catch((error:Error)) => setError(e)) */
-    }, [])
+    const [error, resetError] = useAsync(async () => {
+        setCountries([])
+        resetError()
+        await Promise.reject(new Error('some error occurs'))
+        const countries = await D.getCountries()
+        setCountries(countries)
+    })
 
     return (
         <View style={styles.view}>
             <Text style={styles.title}>Fetch</Text>
             {error && <Text>{error.message}</Text>}
-            <FlatList data={countries} showsVerticalScrollIndicator={false}
+            <FlatList data={countries} 
                 renderItem={({item}) => <Country country={item} />}
                 keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
                 ItemSeparatorComponent={() => <View style={styles.separator} />} />
         </View>
     )
