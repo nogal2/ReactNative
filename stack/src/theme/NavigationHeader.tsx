@@ -19,7 +19,6 @@ export const NavigationHeader: FC<NavigationHeaderProps> = ({
                 </View>
                 {Right && Right()}
             </View>
-
         )
 }
 
