@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from "react";
-import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Button, Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import Generator from "./src/Generator";
 import Header from "./src/header";
 import Input from "./src/input";
+import Modal from "./src/modal";
 import NumList from "./src/Numlist";
+import Picker from "./src/Picker";
 
 export default function App() {
   
@@ -17,31 +19,8 @@ export default function App() {
 
   return(
     <View style={styles.mainView}>
-      <TextInput
-                value={myTextInput}
-                style={styles.input}
-                onChangeText={(text) => setMyTextInput(text)}
-                multiline={true}
-                maxLength={100}
-                autoCapitalize={'none'}
-                editable={true}
-            />
-      <Button 
-        title="Add Text Input"
-        onPress={onAddTextInput}
-      />
-
-      <ScrollView style={{width:'100%'}}>
-        {
-          alphabet.map((item, idx) => (
-            <Text 
-              style={styles.mainText}
-              key={idx}>
-                {item}
-              </Text>
-          ))
-        }
-      </ScrollView>
+      <Modal />
+     
     </View>
   )
 }
@@ -81,5 +60,10 @@ const styles = StyleSheet.create({
       fontSize:25,
       padding:10
     },
+    image: {
+      backgroundColor:'red',
+      width: '100%',
+      height: 700
+    }
   
   })

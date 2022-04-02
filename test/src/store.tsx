@@ -32,3 +32,29 @@ const [appName, setAppName] = useState('My First App')
           num={random}
           delete={onNumDelete} />
       </ScrollView> */}
+
+       {/* <TextInput
+                value={myTextInput}
+                style={styles.input}
+                onChangeText={(text) => setMyTextInput(text)}
+                multiline={true}
+                maxLength={100}
+                autoCapitalize={'none'}
+                editable={true}
+            />
+      <Button 
+        title="Add Text Input"
+        onPress={onAddTextInput}
+      />
+
+      <ScrollView style={{width:'100%'}}>
+        {
+          alphabet.map((item, idx) => (
+            <Text 
+              style={styles.mainText}
+              key={idx}>
+                {item}
+              </Text>
+          ))
+        }
+      </ScrollView> */}
