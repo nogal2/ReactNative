@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import Generator from "./src/Generator";
 import Header from "./src/header";
+import Input from "./src/input";
 import NumList from "./src/Numlist";
 
 export default function App() {
@@ -22,16 +23,26 @@ export default function App() {
 
   return(
     <View style={styles.mainView}>
-      <Header name={appName} />
+      {/* <Header name={appName} />
       <Text
         style={styles.mainText}
         onPress={() => Alert.alert('text touch event')}
       >Hello world
       </Text>
       <Generator add={onAddRandomNum} />
-      <NumList 
-        num={random}
-        delete={onNumDelete} />
+      <ScrollView
+        style={{width:'100%'}}
+        //onMomentumScrollBegin={() => Alert.alert('begin')}
+        //onMomentumScrollEnd={() => Alert.alert('end')}
+        //onScroll={()=> Alert.alert('scrolling')}
+        //onContentSizeChange={(width, height) => Alert.alert(height.toString())}
+        bounces={true}
+      >
+        <NumList 
+          num={random}
+          delete={onNumDelete} />
+      </ScrollView> */}
+      <Input />
     </View>
   )
 }
