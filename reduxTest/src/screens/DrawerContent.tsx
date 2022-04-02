@@ -11,7 +11,7 @@ const title = 'DrawerContent'
 const DrawerContent: FC<DrawerContentComponentProps> = (props) => {
     console.log(Object.keys(props))
 
-    const loggedIn = useSelector<AppState, boolean>(    // loggedIn 은 타입이 boolean 이기 때문에.
+    const loggedIn = useSelector<AppState, boolean>(    // loggedIn 은 타입이 boolean 이기 때문에. (initialState 값을 가져옴)
         (state) => state.loggedIn
     )
     // rootReducer.ts 에서 생성한 initialState 객체를 loggedIn 라는 이름으로 얻음.
