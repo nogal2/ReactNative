@@ -6,10 +6,18 @@ import NumList from "./src/Numlist";
 
 export default function App() {
   const [appName, setAppName] = useState('My First App')
-  const [random, setRandom] = useState<Array<number>>([36,999])
+  const [random, setRandom] = useState<number[]>([36,999])
 
   const onAddRandomNum = () => {
     const randomNum = Math.floor(Math.random()*100)+1;  // Math.floor는 소수점 이하 버림
+    setRandom((prev) => [...prev, randomNum])
+  }
+
+  const onNumDelete = (position:number) => {
+    const newArray = random.filter((num, index) => {
+      return position != index
+    })
+    setRandom(newArray)
   }
 
   return(
@@ -21,7 +29,9 @@ export default function App() {
       >Hello world
       </Text>
       <Generator add={onAddRandomNum} />
-      <NumList num={random} />
+      <NumList 
+        num={random}
+        delete={onNumDelete} />
     </View>
   )
 }

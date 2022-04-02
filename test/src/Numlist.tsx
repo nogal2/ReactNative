@@ -5,9 +5,13 @@ const NumList = (props:any) => {
 
   return(
     props.num.map((item:number, idx:number) => (
-        <View style={styles.numList} key={idx}>
+        <TouchableOpacity 
+          style={styles.numList} 
+          key={idx}
+          onPress={() => props.delete(idx)}
+          >
             <Text>{item}</Text>
-        </View>
+        </TouchableOpacity>
     ))
    
   )
