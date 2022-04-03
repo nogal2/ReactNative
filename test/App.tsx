@@ -3,6 +3,7 @@ import { Alert, Button, Image, ScrollView, StyleSheet, Text, TextInput, View } f
 import Generator from "./src/Generator";
 import Header from "./src/header";
 import Input from "./src/input";
+import Modalsample from "./src/modal";
 import Modal from "./src/modal";
 import NumList from "./src/Numlist";
 import Picker from "./src/Picker";
@@ -19,7 +20,7 @@ export default function App() {
 
   return(
     <View style={styles.mainView}>
-      <Modal />
+      <Modalsample />
      
     </View>
   )
