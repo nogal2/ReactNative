@@ -3,6 +3,30 @@ import React, { useState } from "react"
 import { Alert, Button, StatusBar, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import { TextInput } from "react-native-gesture-handler"
 
+export const headerStyle = () => {
+    navigation.setOptions ({
+        title:"Customizing",
+        headerStyle: {
+            backgroundColor: 'blue'
+        },
+        headerTintColor: 'yellow',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          color: 'green'
+        },
+        headerBackTitle: 'back',
+        headerRight: (() => (
+            <Button 
+              title="go back"
+              onPress={() => {
+                  navigation.navigate("Home")
+              }}
+              color='orange'
+            />
+        ))
+    })
+}
+
 const UserScreen = () => {
     const navigation = useNavigation()
     const route = useRoute()
@@ -11,29 +35,7 @@ const UserScreen = () => {
     const userName = route.params ? route.params.userName : null
     const userLastName = route.params ? route.params.userLastName : null
 
-    const headerStyle = () => {
-        navigation.setOptions ({
-            title:"Customizing",
-            headerStyle: {
-                backgroundColor: 'blue'
-            },
-            headerTintColor: 'yellow',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              color: 'green'
-            },
-            headerBackTitle: 'back',
-            headerRight: (() => (
-                <Button 
-                  title="go back"
-                  onPress={() => {
-                      navigation.navigate("Home")
-                  }}
-                  color='orange'
-                />
-            ))
-        })
-    }
+    
     headerStyle()
 
     return(
