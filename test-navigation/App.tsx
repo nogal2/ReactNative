@@ -9,10 +9,25 @@ import LogoTitle from './src/logo';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer' 
 import DrawerHomeScreen from './src/homeDrawer';
 import DrawerUserScreen from './src/userDrawer';
+import SideDrawer from './src/myDrawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import TabHomeScreen from './src/homeTab';
+import TabUserScreen from './src/userTab';
 
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
+const Tab = createBottomTabNavigator()
+
+/* 
+
+  Stack Navigator
+    -Tab Navigator
+      -Tab Screen D
+      -Tab Screen E
+      
+
+*/
 
 export default function App() {
 
@@ -24,48 +39,57 @@ export default function App() {
   //     />
   //   )
   // }
-  const CustomDrawerContent = (props: any) => {
-    return(
-        <DrawerContentScrollView {...props}>
-          <DrawerItemList {...props} />
-          <DrawerItem 
-            label="Help"
-            onPress={() => Linking.openURL("http://www.google.com")}
-            icon = {()=> <LogoTitle />}
-          />
-          <DrawerItem 
-            label = "Info"
-            onPress={()=> Alert.alert('Info Window')}
-          />
-        </DrawerContentScrollView>
-    )
-  }
+  // const CustomDrawerContent = (props: any) => {
+  //   return(
+  //       <DrawerContentScrollView {...props}>
+  //         <DrawerItemList {...props} />
+  //         <DrawerItem 
+  //           label="Help"
+  //           onPress={() => Linking.openURL("http://www.google.com")}
+  //           icon = {()=> <LogoTitle />}
+  //         />
+  //         <DrawerItem 
+  //           label = "Info"
+  //           onPress={()=> Alert.alert('Info Window')}
+  //         />
+  //       </DrawerContentScrollView>
+  //   )
+  // }
 
   return(
+
     <NavigationContainer>
-      <Drawer.Navigator
-        initialRouteName='Home'
-        screenOptions={{
-          drawerType:"front",
-          drawerPosition:'right',
-          drawerStyle: {
-            backgroundColor: '#c6cbef',
-            width:200
-          },
-          drawerActiveTintColor: 'red',
-          drawerActiveBackgroundColor:'skyblue'
-        }}
-        drawerContent={props => CustomDrawerContent(props) }
-        
-        
-      >
-        <Drawer.Screen 
-          name="Home" 
-          component={DrawerHomeScreen}
-          />
-        <Drawer.Screen name="User" component={DrawerUserScreen} />
-      </Drawer.Navigator>
+      <Tab.Navigator
+        initialRouteName='Home'>
+        <Tab.Screen name="Home" component={TabHomeScreen} />
+        <Tab.Screen name="User" component={TabUserScreen} />
+      </Tab.Navigator>
     </NavigationContainer>
+
+    // <NavigationContainer>
+    //   <Drawer.Navigator
+    //     initialRouteName='Home'
+    //     screenOptions={{
+    //       drawerType:"front",
+    //       drawerPosition:'right',
+    //       drawerStyle: {
+    //         backgroundColor: '#c6cbef',
+    //         width:200
+    //       },
+    //       drawerActiveTintColor: 'red',
+    //       drawerActiveBackgroundColor:'skyblue'
+    //     }}
+    //     drawerContent={props => SideDrawer(props) }
+        
+        
+    //   >
+    //     <Drawer.Screen 
+    //       name="Home" 
+    //       component={DrawerHomeScreen}
+    //       />
+    //     <Drawer.Screen name="User" component={DrawerUserScreen} />
+    //   </Drawer.Navigator>
+    // </NavigationContainer>
 
 
     // <NavigationContainer>
