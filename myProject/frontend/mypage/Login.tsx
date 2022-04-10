@@ -28,10 +28,9 @@ export default function Login() {
     const {loggedIn, loggedUser} = log
     const dispatch = useDispatch()
     console.log("loggedIn: "+ loggedIn + " loggedUser: " + loggedUser)
-   /*  if(loggedIn) {
-        navigation.navigate("MyPage")
-    } */
+
     let userInfo:string[]
+
     //카카오 아이디 가져오기
     const signInWithKakao = async (): Promise<void> => {
         const token: KakaoOAuthToken = await login();
@@ -45,15 +44,18 @@ export default function Login() {
                 memberId: userInfo[0],
                 memberNickname: userInfo[1],
             }
-        }).then(function(response) {
-            if(response.data == "yes") {
+        }).then((response) => {
+            if(response.data == "no") {
                 console.log("로그인 및 회원가입 되었습니다.")
+                setPassword("")
+                userLogin()
             } else {
                 console.log("로그인 되었습니다.")
+                setPassword("")
+                userLogin()
             }
         }).catch((err:Error) => console.log(err.message))
-        dispatch(L.loginAction({ memberId: userInfo[0], 
-                                 memberNickname: userInfo[1] }))
+        
         //navigation.navigate("MyPage")
     };
   
@@ -61,8 +63,12 @@ export default function Login() {
             getProfile().then(value => {
                 userInfo = value.split(" ")
                 if(userInfo.length > 0){
-                    dispatch(loginAction({ memberId: userInfo[0],
-                                           memberNickname: userInfo[1]}))
+                    console.log("koko")
+                    setMemberId(userInfo[0])
+                    setMemberNickname(userInfo[1])
+                    console.log(`useCallback ${memberId} ${memberNickname}`)
+                    userLogin()
+                    
                     //navigation.navigate("MyPage")
                 }
             })
@@ -81,14 +87,22 @@ export default function Login() {
                 memberId: memberId,
                 memberPwd: password
         }
-        }).then(function(response) {
+        }).then((response) => {
             console.log(`memberId: ${response.data.memberId} memberNickname: ${response.data.memberNickname}`)
             if(response.data.memberId == memberId) {
                 console.log("로그인 되었습니다.")
-                dispatch(L.loginAction({ memberId: response.data.memberId, memberNickname: response.data.memberNickname }))
-                console.log("디스패치아래")
-                //navigation.navigate("MyPage")
-                console.log('로그인 아래')
+                dispatch(L.loginAction({ memberId: response.data.memberId, 
+                                         memberNickname: response.data.memberNickname,
+                                         memberEmail: response.data.memberEmail,
+                                         memberPhone: response.data.memberPhone,
+                                         memberName: response.data.memberName,
+                                         memberCoin: response.data.memberCoin,
+                                         memberGender: response.data.memberGender,
+                                         memberGrade: response.data.memberGrade,
+                                         memberMainAddr: response.data.memberMainAddr,
+                                         memberDetailAddr: response.data.memberDetailAddr
+                                    }))
+                
             } 
         }).catch((err:Error) => console.log(err.message))
     }
