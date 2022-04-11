@@ -9,9 +9,9 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../store";
 import * as L from '../store/login'
-import * as U from './utils'
-import { loginAction } from "../store/login";
 import config from "../project.config"
+import * as D from "../store/drawer"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
     const navigation = useNavigation()
@@ -28,6 +28,16 @@ export default function Login() {
     const {loggedIn, loggedUser} = log
     const dispatch = useDispatch()
     console.log("loggedIn: "+ loggedIn + " loggedUser: " + loggedUser)
+
+    const goShoppingCart = () => {
+        dispatch(D.drawerChangeFalseAction())
+        navigation.dispatch(DrawerActions.openDrawer())
+    }
+    const goSetting = () => {
+        dispatch(D.drawerChangeTrueAction())
+        navigation.dispatch(DrawerActions.openDrawer())
+    }
+
 
     let userInfo:string[]
 
@@ -131,7 +141,7 @@ export default function Login() {
                 <View style={[styles.topBar]}>
                     <NavigationHeader title="홈" viewStyle={{}}
                     Left= {() => <Icon name="text-account" size={30} onPress={drawerOpen} />}
-                    Right= {() => <Icon name="cart-heart" size={30} />}
+                    Right= {() => <Icon name="cart-heart" size={30}/>}
                     />
                 </View>
 
@@ -181,8 +191,8 @@ export default function Login() {
             <SafeAreaView style={[styles.container]}>
                 <View style={[styles.topBar]}> 
                     <NavigationHeader title="홈" 
-                    Left= {() => <Icon name="text-account" size={30} onPress={drawerOpen} />}
-                    Right= {() => <Icon name="cart-heart" size={30} />} />
+                    Left= {() => <Icon name="text-account" size={30} onPress={goSetting} />}
+                    Right= {() => <Icon name="cart-heart" size={30} onPress={goShoppingCart}/>} />
                 </View>
                 <View style={[styles.contentView]}>
                     <Text>마이페이지</Text>

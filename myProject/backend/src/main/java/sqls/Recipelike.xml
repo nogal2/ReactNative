@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.recipe.a.dao.RecipeLikeDao">
+
+<select id="countRecipeLike" resultType="Integer">
+	SELECT COUNT(*) FROM RECIPELIKE
+</select>
+
+<insert id="likeRecipe" parameterType="com.recipe.a.dto.RecipeLikeDto">
+	INSERT INTO RECIPELIKE(LIKESEQ, RECIPESEQ, MEMBERID)
+	VALUES(NEXTVAL('LIKESEQ'), #{recipeSeq}, #{memberId})
+</insert>
+
+<delete id="unLikeRecipe">
+	DELETE FROM RECIPELIKE WHERE RECIPESEQ=#{recipeSeq} AND MEMBERID=#{memberId}
+</delete>
+
+<!-- 좋아요 누른 레시피시퀀스 가져오기 -->
+<select id="getRecipeSeq" parameterType="String" resultType="com.recipe.a.dto.RecipeDto">
+		SELECT RECIPESEQ 
+		FROM RECIPELIKE
+		WHERE MEMBERID = #{memberId}
+</select>
+</mapper>
