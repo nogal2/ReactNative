@@ -1,11 +1,9 @@
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useState } from "react";
 import { Alert, Modal, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "../../store";
+import { useDispatch } from "react-redux";
 import { NavigationHeader } from "../../theme";
 import * as L from "../../store/login"
 import * as D from "../../store/drawer"
@@ -23,23 +21,26 @@ const MyInfoItem = ({loggedUser}:any) => {
 
     const navigation = useNavigation()
     const dispatch = useDispatch()
-    const goShoppingCart = () => {
+    const goShoppingCart = useCallback(() => {
         dispatch(D.drawerChangeFalseAction())
         navigation.dispatch(DrawerActions.openDrawer())
-    }
-    const goSetting = () => {
+    },[])
+    const goSetting = useCallback(() => {
         dispatch(D.drawerChangeTrueAction())
         navigation.dispatch(DrawerActions.openDrawer())
-    }
-    const goMyInfoUpdate = () => {
+    },[])
+    const goMyInfoUpdate = useCallback(() => {
         navigation.navigate("MyInfoUpdate")
-    }
+    }, [] )
 
     const update = () => {
         console.log(updateValue)
         axios.post(address+updateUrl, null, { 
-                                                params: { [updateInfo]: updateValue,
-                                                          memberId: loggedUser.memberId }} )
+            params: { 
+                        [updateInfo]: updateValue,
+                        memberId: loggedUser.memberId 
+                    }
+            })
         .then((response) => {
             if(response.data === "success") {
                 Alert.alert("수정이 완료되었습니다.")
@@ -121,17 +122,26 @@ const MyInfoItem = ({loggedUser}:any) => {
                 <Text style={{fontSize:23}}>코인: {loggedUser.memberCoin}</Text>
             </View>
             <View style={[styles.contentView]}>
-                <Text style={{fontSize:23}}>주소: {loggedUser.memberMainAddr}</Text>
-                <Pressable style={[styles.pressAble]} onPress={() => {setModalVisible(!modalVisible)} }>
+                <Text style={{fontSize:23}}>주소: {loggedUser.memberMainAddr + loggedUser.memberDetailAddr}</Text>
+                <Pressable 
+                    style={[styles.pressAble]} 
+                    onPress={() => {
+                        navigation.navigate("MyInfoAddr")
+                    }}>
                     <Text>수정하기</Text>
                 </Pressable>
             </View>
-            <View style={{flex:1,alignItems:'center', justifyContent:"center"}}>
-                <TouchableOpacity style={{backgroundColor:Colors.amber600}} onPress={() => goMyInfoUpdate()}>
-                    <Text style={{color:'white'}}>수정하기</Text>
-                </TouchableOpacity>
+            <View style={[styles.contentView]}>
+                <Text style={{fontSize:23}}>테스트</Text>
+                <Pressable 
+                    style={[styles.pressAble]} 
+                    onPress={() => {
+                        navigation.navigate("Certification")
+                    }}
+                    >
+                    <Text>수정하기</Text>
+                </Pressable>
             </View>
-         
             <Modal
                 style={{justifyContent:'center', alignItems:'center'}}
                 animationType="slide"
@@ -167,6 +177,7 @@ const MyInfoItem = ({loggedUser}:any) => {
                 </View>
 
             </Modal>
+            
         </SafeAreaView>
     )
 }

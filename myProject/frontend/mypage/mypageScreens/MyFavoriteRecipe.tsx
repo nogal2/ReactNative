@@ -1,10 +1,8 @@
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-import axios from "axios";
 import React, { useCallback, useRef, useState } from "react";
-import { Button, FlatList, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSelector } from "react-redux";
-import { address } from "../../project.config";
 import { AppState } from "../../store";
 import { NavigationHeader } from "../../theme";
 import * as L from '../../store/login'
@@ -29,6 +27,7 @@ export const MyFavoriteRecipe = () => {
                     console.log("hook 레시피: "+JSON.stringify(myData))
                 })
     }
+
    useEffect(() => {
         datas()
     }, [myData.length]) 
