@@ -45,19 +45,16 @@ public class MembersController {
 	
 	//회원가입 - 노승현
 	@RequestMapping(value = "/regist", method = {RequestMethod.GET, RequestMethod.POST})
-	public String regist(MembersDto dto) {
+	public MembersDto regist(MembersDto dto) {
 		System.out.println("MembersController regist()");
 		String salt = BCrypt.gensalt(10);	// 임의의 솔트값 생성
 		dto.setSalt(salt);	// 솔트값 Dto 에 담기
 		dto.setMemberPwd(BCrypt.hashpw(dto.getMemberPwd(), salt));	//솔트값과 비밀번호 합쳐서 암호화후 Dto에 담기
-		System.out.println("dto.getMember_pwd: " + dto.getMemberPwd() );
+		System.out.println("dto.getMember_pwd: " + dto.getMemberPwd() + " memberEmail: " + dto.getMemberEmail()  );
+		System.out.println("memberId: " + dto.getMemberId() + " " + "memberPwd: " + dto.getMemberPwd());
+		MembersDto result = memberService.regist(dto);
 		
-		boolean b = memberService.regist(dto);
-		if (b) {
-			return "yes";	// 회원가입 실패
-		} else {
-			return "no";	// 회원가입 성공
-		}
+		return result;
 		
 	}
 	
@@ -95,6 +92,19 @@ public class MembersController {
 		
 		return result;
 	}
+	
+	// 내가 쓴 레시피 가져오기
+	@RequestMapping(value = "/myUploadedRecipe", method = {RequestMethod.GET})
+	public List<RecipeDto> myUploadedRecipe(String memberId) {
+		System.out.println("MemberController myUploadedRecipe");
+		System.out.println("memberId: " + memberId);
+		
+		List<RecipeDto> result = memberService.myUploadedRecipe(memberId);
+		System.out.println(result.toString());
+		
+		return result;
+	}
+		
 	
 	//이메일 업데이트
 	@RequestMapping(value = "/updateEmail", method = {RequestMethod.POST})
@@ -138,6 +148,22 @@ public class MembersController {
 		}		
 		return "success";
 	}
+	
+	// 주소 업데이트
+	@RequestMapping(value = "/updateAddr", method = {RequestMethod.POST})
+	public String updateAddr(MembersDto dto) {
+		System.out.println("MemberController updateAddr");
+		System.out.println("MembersDto: " + dto.toString());
+		
+		boolean b = memberService.updateAddr(dto);
+		System.out.println("updateAddr result: " +b);
+		if(b) {
+			return "fail";
+		}		
+		return "success";
+	}
+	
+	
 	
 	//테스트용
 	@RequestMapping(value = "/test1", method = {RequestMethod.GET})

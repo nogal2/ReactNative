@@ -56,15 +56,22 @@ public class MembersService {
 	}
 	
 	// 회원가입 - 노승현
-	public boolean regist(MembersDto dto) {	
-		int b = dao.idCheck(dto);	
+	public MembersDto regist(MembersDto dto) {	
 		
-		if(b == 1) {
-			return true;	// 아이디 중복됨(회원가입 실패)
+		int n = dao.idCheck(dto);
+		int b;
+		if(n>0) {	// 아이디 있음
+			b = 0;
 		} else {
-			int n = dao.regist(dto);
+			b = dao.regist(dto);
+		}
+		
+		if(b > 0) {
+			return dao.login(dto.getMemberPwd());
 			
-			return n>0? false:true;	// false: 회원가입 성공, true: 회원가입 실패
+		} else {
+			MembersDto onlyLogin = new MembersDto();
+			return onlyLogin;
 		}
 	}
 	
@@ -72,10 +79,8 @@ public class MembersService {
 	public MembersDto login(String memberId, String memberPwd) {
 		
 		MembersDto salt = dao.getSalt(memberId, memberPwd);
-		System.out.println("memberService getSalt: " + salt.getSalt()+ " memberPwd: " + memberPwd);
 		
 		String encodedPassword = bcr.hashpw(memberPwd, salt.getSalt());
-		System.out.println("encodedPassword: " + encodedPassword);
 		
 		return dao.login(encodedPassword);
 	}
@@ -141,6 +146,29 @@ public class MembersService {
 		return result;
 	}
 	
+	// 내가 업로드한 레시피 불러오기
+	public List<RecipeDto> myUploadedRecipe(String memberId) {
+		System.out.println("myUploadedRecipe service");
+		
+		List<RecipeDto> recipeSeqListDto = RLDao.getRecipeSeq(memberId);
+		System.out.println("recipeSeqListDto: " + recipeSeqListDto.toString());
+		System.out.println("recipeSeqListDto: " + recipeSeqListDto.size());
+		
+		List<Integer> recipeSeqList = new ArrayList<Integer>();
+		for(int i=0; i < recipeSeqListDto.size(); i++) {
+			recipeSeqList.add(recipeSeqListDto.get(i).getRecipeSeq());
+		}
+		System.out.println("recipeSeqList: " + recipeSeqList.toString());
+		
+		List<RecipeDto> recipeInfo = new ArrayList<RecipeDto>();
+		for(int i=0; i<recipeSeqList.size(); i++) {
+			recipeInfo.add(RDao.myUploadedRecipe(recipeSeqList.get(i)));
+		}
+		
+		return recipeInfo;
+		
+	}
+	
 	// 이메일 수정
 	public boolean updateEmail(String memberId, String memberEmail) {
 		
@@ -153,6 +181,23 @@ public class MembersService {
 	public boolean updateNickname(String memberId, String memberNickname) {
 		
 		int n = dao.updateNickname(memberId, memberNickname);
+		
+		return n>0? false : true; // false면 업데이트 성공, true면 업데이트 실패
+	}
+	
+	// 전화번호 수정
+	public boolean updatePhone(String memberId, String memberPhone) {
+		
+		int n = dao.updateNickname(memberId, memberPhone);
+		
+		return n>0? false : true; // false면 업데이트 성공, true면 업데이트 실패
+	}
+	
+	// 주소 수정
+	public boolean updateAddr(MembersDto dto) {
+		
+		int n = dao.updateAddr(dto);
+		System.out.println("updateAddr result int: " +n);
 		
 		return n>0? false : true; // false면 업데이트 성공, true면 업데이트 실패
 	}

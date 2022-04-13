@@ -32,6 +32,10 @@ public interface MembersDao {
 	
 	// 이메일 수정
 	public int updateEmail(String memberId, String memberEmail);
-	// 닉네임 사진
+	// 닉네임 수정
 	public int updateNickname(String memberId, String memberNickname);
+	// 전화번호 수정
+	public int updatePhone(String memberId, String memberPhone);
+	// 주소 수정
+	public int updateAddr(MembersDto dto);
 }

@@ -56,4 +56,17 @@
 		SET MEMBERNICKNAME = #{memberNickname}
 		WHERE MEMBERID = #{memberId}
 	</update>
+	<!-- 전화번호 업데이트 -->
+	<update id="updatePhone" parameterType="String">
+		UPDATE MEMBERS
+		SET MEMBERNICKNAME = #{memberPhone}
+		WHERE MEMBERID = #{memberId}
+	</update>
+	<!-- 주소 업데이트 -->
+	<update id="updateAddr" parameterType="com.recipe.a.dto.MembersDto">
+		UPDATE MEMBERS
+		SET MEMBERMAINADDR = #{memberMainAddr}, MEMBERDETAILADDR = #{memberDetailAddr}, MEMBERZIPCODE = #{memberZipcode}
+		WHERE MEMBERID = #{memberId}
+		
+	</update>
 </mapper>

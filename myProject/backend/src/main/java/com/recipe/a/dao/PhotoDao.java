@@ -11,6 +11,8 @@ import com.recipe.a.dto.PhotoDto;
 @Repository
 public interface PhotoDao {
 
+	public int uploadRecipeImg(PhotoDto dto);
+	
 	public int countPhoto();
 
 	public List<PhotoDto> getPhoto(PhotoDto photoDto);

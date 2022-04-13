@@ -1,7 +1,7 @@
 import axios from "axios";
 import Color from "color";
 import React, { Component, useState } from "react";
-import { StyleSheet, Text, View, TextInput, FlatList, ScrollView, Alert, Dimensions, Image, TouchableOpacity, ToastAndroid } from "react-native";
+import { StyleSheet, Text, View, TextInput, FlatList, ScrollView, Alert, Dimensions, Image, TouchableOpacity, ToastAndroid, Platform } from "react-native";
 import { Button } from "react-native-paper";
 import RNPickerSelect from 'react-native-picker-select'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -9,15 +9,29 @@ import TagInput from 'react-native-tags-input';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import * as L from '../../store/login'
 import { AppState } from "../../store";
-import { white } from "react-native-paper/lib/typescript/styles/colors";
+import { black, white } from "react-native-paper/lib/typescript/styles/colors";
 import DetailList from "./DetailList";
 import { useSelector } from "react-redux";
 import config from "../../project.config"
 import { useNavigation } from "@react-navigation/native";
-import RecipeRecommendList from "../../recipe/RecipeRecommendList";
-/* npm install @react-native-picker/picker */
+
+// yarn add react-native-image-picker
 
 export default function UploadScreen() {
+    const [thumbnailAssets, setThumnailAssets] = useState(
+        {
+            // "assets": 
+            // [
+            //     {"fileName": "", 
+            //     "fileSize": 0, 
+            //     "height": 0, 
+            //     "type": "", 
+            //     "uri": "", 
+            //     "width": 0}
+            // ]
+        }
+    )
+
     const navigation = useNavigation()
     // 멤버아이디
     const log = useSelector<AppState, L.State>((state) => state.login)
@@ -26,17 +40,15 @@ export default function UploadScreen() {
     // 카테고리
     const [recipeBigCategory, setPickerSelect] = useState('')
     const [recipeSmallCategory, setPickerSelect2] = useState('')
+    const [recipeInformation, setPickerSelect3] = useState('')
 
-
-    // 요리정보(몇 인분))
-    const [recipeInformation, setPickerSelect3] = useState(0)
-
-    // seq
-    const [seq, setSeq] = useState()
+    const [seq, setSeq] = useState({})
 
     // 사진 url
     const [titleimgurl, setTitleimgurl] = useState("")
 
+    // 유튜브 주소
+    const [youtubeurl, setYoutubeurl] = useState('')
 
     // 제목, 내용, 가격
     const [recipeTitle, setTitle] = useState('')
@@ -55,6 +67,7 @@ export default function UploadScreen() {
     // 레시피 내용 순서 추가
     const [tests, setTests] = useState([
         {
+            imgAssets: {},
             imglist: "",
             imgText: ""
         }
@@ -77,7 +90,7 @@ export default function UploadScreen() {
         setCountList(countArr)
         let num = list
         console.log("tests: " + JSON.stringify(tests[counter - 1]))
-        tests.push({ imglist: "", imgText: "" })
+        tests.push({ imgAssets: "", imglist: "", imgText: "" })
         num.push(<DetailList setData={setImglist} setData2={setTests} setData3={tests} setData4={counter} setData5={setImgText} />)
         setList(num)
         //onCreate()
@@ -106,7 +119,41 @@ export default function UploadScreen() {
     const titleimgshow = () => {
         launchImageLibrary({}, response => {
             setTitleimgurl(response.assets[0].uri)
+            setThumnailAssets(response)
+            console.log(response)
         })
+    }
+
+    // 이미지 서버 저장
+    const uploadImageToServer = (assets: any) => {
+        console.log("assets!!: " + assets)
+        const createFormData = (body: any = {}) => {
+            const data = new FormData();
+
+            // 사진 추가
+            data.append('photo',
+                assets
+            );
+
+            // 파일 이름 추가
+            Object.keys(body).forEach((key) => {
+                data.append(key, body[key]);
+            });
+
+            return data;
+        };
+
+        const handleUploadPhoto = () => {
+
+            fetch(config.address + 'imageUploadToServer', {
+                method: 'POST',
+                body: createFormData({ fileName: assets.fileName }),
+            })
+                .catch((error) => {
+                    console.log('error', error);
+                });
+        }
+        handleUploadPhoto()
     }
 
 
@@ -131,9 +178,11 @@ export default function UploadScreen() {
                         recipeContent: recipeContent,
                         recipeBigCategory: recipeBigCategory,
                         recipeSmallCategory: recipeSmallCategory,
-                        recipeVideoUrl: "test",
+                        recipeVideoUrl: youtubeurl,
                         recipeGoodsTag: String(tags.tagsArray),
-                        recipePrice: recipePrice
+                        recipePrice: recipePrice,
+                        recipeCapacity: recipeInformation,
+                        recipeThumbnail: thumbnailAssets.assets[0].fileName
                     }
                 }).then(function (response) {
                     console.log("seq값 : " + response.data)
@@ -159,14 +208,15 @@ export default function UploadScreen() {
 
         // 썸네일 이미지 업로드
         const uploadRecipeThumbnailImg = (temp: any) => {
-            axios.get(config.address + "uploadRecipeImg",
+            uploadImageToServer(thumbnailAssets.assets[0])
+            axios.post(config.address + "uploadRecipeImg", null,
                 {
                     params: {
                         docsSeq: temp,
                         photoTitle: "thumbnail",
                         photoContent: recipeTitle,
                         photoCategory: "recipe",
-                        photoUrl: titleimgurl
+                        photoUrl: thumbnailAssets.assets[0].fileName
 
                     }
                 }).then(function (response) {
@@ -178,11 +228,14 @@ export default function UploadScreen() {
                 }).catch(function () {
                     //Alert.alert("이미지 추가되지 않았습니다.")
                 })
+
         }
 
         // 레시피 순서 이미지 업로드
         const uploadRecipeContentImg = (temp: any) => {
+            console.log("size?" + tests.length)
             for (let i = 0; i < tests.length; i++) {
+                uploadImageToServer(tests[i].imgAssets)
                 axios.get(config.address + "uploadRecipeImg",
                     {
                         params: {
@@ -191,7 +244,7 @@ export default function UploadScreen() {
                             photoTitle: "cookOrder",
                             photoContent: tests[i].imgText,
                             photoCategory: "recipe",
-                            photoUrl: tests[i].imglist,
+                            photoUrl: tests[i].imgAssets.fileName,
 
                         }
 
@@ -219,15 +272,15 @@ export default function UploadScreen() {
         { label: '야식용', value: 'nightmeal' }
     ]
     const values3 = [
-        { label: "1인분", value: 'one' },
-        { label: "2인분", value: 'two' },
-        { label: "3인분", value: 'three' },
-        { label: "4인분", value: 'four' },
-        { label: "5인분", value: 'five' },
-        { label: "6인분", value: 'six' },
-        { label: "7인분", value: 'seven' },
-        { label: "8인분", value: 'eight' },
-        { label: "9인분", value: 'nine' }
+        { label: "1인분", value: 1 },
+        { label: "2인분", value: 2 },
+        { label: "3인분", value: 3 },
+        { label: "4인분", value: 4 },
+        { label: "5인분", value: 5 },
+        { label: "6인분", value: 6 },
+        { label: "7인분", value: 7 },
+        { label: "8인분", value: 8 },
+        { label: "9인분", value: 9 }
     ]
 
     return (
@@ -310,7 +363,20 @@ export default function UploadScreen() {
                 </View>
 
                 <View style={styles.frame}>
+                    <Text style={styles.text}>유튜브 영상 주소</Text>
+                </View>
+                <View style={styles.youtubeFrame}>
+                    <Text style={styles.tagText2}>작성하신 레시피의 조리 영상이 있다면 유튜브 주소를 남겨주세요.</Text>
+                </View>
+                <View style={styles.priceframe}>
+                    <TextInput style={styles.textinput} value={(youtubeurl)} onChangeText={(youtubeurl) => setYoutubeurl(youtubeurl)} placeholder="https://www.youtube.com/"></TextInput>
+                </View>
+
+                <View style={styles.frame}>
                     <Text style={styles.text}>굿즈태그</Text>
+                </View>
+                <View style={styles.tagFrame}>
+                    <Text style={styles.tagText2}>재료, 목적, 효능, 대상 등을 입력 후 완료키를 눌러서 태그로 남겨주세요.{"\n"}예) 돼지고기, 다이어트, 비만, 칼슘, 감기예방, 이유식, 초간단</Text>
                 </View>
                 <View style={styles.goodsframe}>
                     <TagInput updateState={(tags: any) => { setTags(tags) }}
@@ -322,7 +388,7 @@ export default function UploadScreen() {
                         leftElementContainerStyle={{ marginLeft: 3 }}
                         containerStyle={{ width: (Dimensions.get('window').width - 40) }}
                         inputContainerStyle={[styles.textInput, { backgroundColor: '#fff' }]}
-                        inputStyle={{ color: '#fff' }}
+                        inputStyle={{ color: 'black' }}
                         onFocus={() => {
                             setTagsColor('#fff')
                             setTagsText('#3ca897')
@@ -342,7 +408,7 @@ export default function UploadScreen() {
                     <Text style={styles.text}>레시피가격(₩)</Text>
                 </View>
                 <View style={styles.priceframe}>
-                    <TextInput style={styles.textinput} value={(recipePrice)} onChangeText={(recipePrice) => setPrice(recipePrice)} keyboardType="number-pad" ></TextInput>
+                    <TextInput style={styles.textinput} value={(recipePrice)} onChangeText={(recipePrice) => setPrice(recipePrice)} keyboardType="number-pad" placeholder="예) 1000, 5000 숫자를 입력 원단위" ></TextInput>
                 </View>
                 <Button style={styles.btn} onPress={RecipeUploadBtn}>레시피작성</Button>
             </ScrollView>
@@ -406,7 +472,7 @@ const styles = StyleSheet.create({
     },
     priceframe: {
         width: '100%',
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
 
     picture: {
@@ -446,6 +512,8 @@ const styles = StyleSheet.create({
     btn: {
         marginTop: 20,
         marginVertical: 8,
+        height: 60,
+
 
     },
     textInput: {
@@ -457,7 +525,8 @@ const styles = StyleSheet.create({
         padding: 3,
     },
     tag: {
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        height: 35
     },
     tagText: {
         color: '#3ca897'
@@ -511,6 +580,30 @@ const styles = StyleSheet.create({
         fontSize: 19,
         marginTop: -15,
         marginBottom: -15
-    }
+    },
+
+    tagText2: {
+        marginLeft: 10,
+        fontSize: 13,
+        color: "black"
+
+    },
+    tagFrame: {
+        width: '100%',
+        height: 60,
+        backgroundColor: "white",
+        borderBottomWidth: 1,
+        borderColor: "#adb5bd",
+        justifyContent: "center"
+    },
+
+    youtubeFrame: {
+        width: '100%',
+        height: 40,
+        backgroundColor: "white",
+        borderBottomWidth: 1,
+        borderColor: "#adb5bd",
+        justifyContent: "center"
+    },
 
 })
