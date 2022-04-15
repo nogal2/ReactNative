@@ -16,6 +16,7 @@ const DrawerSettingLogin: FC<DrawerContentComponentProps> = (props) => {
     const log = useSelector<AppState, L.State>((state) => state.login)
     const {loggedIn, loggedUser} = log
     const dispatch = useDispatch()
+
     const goMyFavoriteRecipe = useCallback(() => {
         props.navigation.navigate("MyFavoriteRecipe")
     },[])
@@ -48,13 +49,13 @@ const DrawerSettingLogin: FC<DrawerContentComponentProps> = (props) => {
             <View style={[styles.myInfo]}>
                 <View style={[styles.myInfoLeftView]}>
                     <Image 
-                        source={require("./foodPicture.jpg")} 
+                        source={{uri:loggedUser.memberThumbnail}} 
                         style={[styles.myImage]}
                     />
                 </View>
                 <View style={{margin:5, marginTop:15}}>
-                    <Text style={{marginBottom:3}}>닉네임</Text>
-                    <Text>이메일 주소</Text>
+                    <Text style={{marginBottom:3}}>{loggedUser.memberNickname}</Text>
+                    <Text>{loggedUser.memberEmail}</Text>
                 </View>
             </View>
 
@@ -101,6 +102,7 @@ const DrawerSettingLogin: FC<DrawerContentComponentProps> = (props) => {
             }} >
                 <Icon name="logout" size={30} style={{color:Colors.grey500}}/>
             </TouchableOpacity>
+            
                     
         </DrawerContentScrollView>
     )

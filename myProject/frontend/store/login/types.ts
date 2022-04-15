@@ -12,6 +12,7 @@ export type User = {
     memberName?: string
     memberGender?: string
     memberGrade?: string    
+    memberThumbnail?: string | null
 }
 
 export type State = {
