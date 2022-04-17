@@ -38,7 +38,7 @@ export const signOutWithKakao = async (): Promise<void> => {
 export const getProfile = async (): Promise<string> => {
     const profile: KakaoProfile  = await getKakaoProfile();
     console.log( JSON.stringify(profile))
-    if(profile.gender === 'MAIL' ) profile.gender = '남자'
+    if(profile.gender === 'MALE' ) profile.gender = '남자'
     else profile.gender = '여자'
     return  profile.id +" " + 
             profile.nickname + " " + 

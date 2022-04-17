@@ -43,11 +43,6 @@ public class MembersService {
 		this.dao = dao;
 	}
 
-	public int countMembers() {
-		System.out.println("MembersService");
-		return dao.countMembers();
-	}
-	
 	// 아이디 중복
 	public boolean idCheck(MembersDto dto) {
 		int n = dao.idCheck(dto);
@@ -216,6 +211,29 @@ public class MembersService {
 	public List<RecipeDto> test1() {
 		return dao.test1();
 	}
-
 	
+	/****************** 웹 업데이트를 위한 서비스 기능 *********************/
+
+	public int updatePersonalInfo(MembersDto dto) {
+		if (dto.getMemberPwd().length() > 0) {
+			String salt = BCrypt.gensalt(10);
+			dto.setSalt(salt);
+			dto.setMemberPwd(BCrypt.hashpw(dto.getMemberPwd(), salt));
+		}
+		return dao.updatePersonalInfo(dto);
+	}
+
+	public int updatePaymentInfo(MembersDto dto) {
+		return dao.updatePaymentInfo(dto);
+	}
+	
+	public MembersDto updateLoggedInfo(String memberId) {
+		return dao.updateLoggedInfo(memberId);
+	}
+	/****************************************************************/
+
+	public int plusCoin(MembersDto dto) {
+		return dao.plusCoin(dto);
+	}
+
 }

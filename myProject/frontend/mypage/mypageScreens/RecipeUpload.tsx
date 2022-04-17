@@ -68,7 +68,7 @@ export default function UploadScreen() {
     const [tests, setTests] = useState([
         {
             imgAssets: {},
-            imglist: "",
+            imglist: "/",
             imgText: ""
         }
     ])
@@ -90,7 +90,7 @@ export default function UploadScreen() {
         setCountList(countArr)
         let num = list
         console.log("tests: " + JSON.stringify(tests[counter - 1]))
-        tests.push({ imgAssets: "", imglist: "", imgText: "" })
+        tests.push({ imgAssets: "", imglist: "/", imgText: "" })
         num.push(<DetailList setData={setImglist} setData2={setTests} setData3={tests} setData4={counter} setData5={setImgText} />)
         setList(num)
         //onCreate()
@@ -193,13 +193,14 @@ export default function UploadScreen() {
                         uploadRecipeThumbnailImg(response.data)
                         uploadRecipeContentImg(response.data)
                         navigation.navigate('Login' as never)
+                        navigation.navigate('RecipeNavigator' as never, { screen: 'RecipeHome'} as never)
                         navigation.navigate('RecipeNavigator' as never, {
                             screen: 'RecipeDetail',
                             params: {
                                 seq: response.data,
                                 category: 'recipe'
                             }
-                        } as never)
+                        } as never) 
                     }
 
                 }).catch(function () {
@@ -218,7 +219,6 @@ export default function UploadScreen() {
                         photoContent: recipeTitle,
                         photoCategory: "recipe",
                         photoUrl: thumbnailAssets.assets[0].fileName
-
                     }
                 }).then(function (response) {
                     console.log(response.data)
@@ -240,18 +240,14 @@ export default function UploadScreen() {
                 axios.get(config.address + "uploadRecipeImg",
                     {
                         params: {
-
                             docsSeq: temp,
                             photoTitle: "cookOrder",
                             photoContent: tests[i].imgText,
                             photoCategory: "recipe",
                             photoUrl: tests[i].imgAssets.fileName,
-
                         }
-
                     }).then(function (response) {
                         console.log(response.data)
-
                         if (response.data == "YES") {
                             //Alert.alert("이미지 추가되었습니다..")
                         }
@@ -422,7 +418,7 @@ export default function UploadScreen() {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '100%',
+        //height: '100%',
     },
     recipeframe: {
         width: '100%',

@@ -13,6 +13,7 @@ export type User = {
     memberGender?: string
     memberGrade?: string    
     memberThumbnail?: string | null
+    idSeq: number // 1 카카오 2 구글 3 일반
 }
 
 export type State = {

@@ -16,7 +16,6 @@ import com.recipe.a.dto.MembersDto;
 @Repository
 public interface MembersDao {
 
-	public int countMembers();
 	
 	// 아이디 체크
 	public int idCheck(MembersDto dto);
@@ -40,4 +39,13 @@ public interface MembersDao {
 	public int updatePhone(String memberId, String memberPhone);
 	// 주소 수정
 	public int updateAddr(MembersDto dto);
+
+	/****************** 웹 업데이트를 위한 Dao 기능 *********************/
+	public int updatePersonalInfo(MembersDto dto);
+
+	public int updatePaymentInfo(MembersDto dto);
+	
+	public MembersDto updateLoggedInfo(String memberId);
+	
+	public int plusCoin(MembersDto dto);
 }

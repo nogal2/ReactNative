@@ -35,20 +35,13 @@ public class MembersController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@RequestMapping(value = "/countMembers", method = {RequestMethod.GET, RequestMethod.POST})
-	public String countMembers() {
-		System.out.println("MembersController countMembers()");
-		int res = memberService.countMembers();
-		System.out.println(res);
-		return "개수는: " + res;
-	}
-	
 	//회원가입 - 노승현
 	@RequestMapping(value = "/regist", method = {RequestMethod.GET, RequestMethod.POST})
 	public MembersDto regist(MembersDto dto) {
 		System.out.println("MembersController regist()");
+		System.out.println("regist dto: " + dto.toString());
 		MembersDto result = memberService.regist(dto);
-		System.out.println("result: " + result.toString());
+		System.out.println("regist result: " + result.toString());
 		return result;
 		
 	}
@@ -158,8 +151,35 @@ public class MembersController {
 		return "success";
 	}
 	
+	/****************** 웹 업데이트를 위한 컨트롤러 기능 *********************/
 	
+	@RequestMapping(value = "/updatePersonalInfo", method = {RequestMethod.POST})
+	public MembersDto updatePersonalInfo(MembersDto dto) {
+		System.out.println("MemberController updatePersonalInfo");
+		System.out.println("MembersDto: " + dto.toString());
+		memberService.updatePersonalInfo(dto);
+		return memberService.updateLoggedInfo(dto.getMemberId());
+	}
 	
+	@RequestMapping(value = "/updatePaymentInfo", method = {RequestMethod.POST})
+	public MembersDto updatePaymentInfo(MembersDto dto) {
+		System.out.println("MemberController updatePaymentInfo");
+		System.out.println("MembersDto: " + dto.toString());
+		memberService.updatePaymentInfo(dto);
+		return memberService.updateLoggedInfo(dto.getMemberId());
+		
+	}
+	
+	/*****************************************************************/
+	
+	@RequestMapping(value = "/plusCoin", method = {RequestMethod.POST})
+	public int plusCoin(MembersDto dto) {
+		System.out.println("MemberController plusCoin");
+		System.out.println("MembersDto " + dto.toString());
+		
+		return memberService.plusCoin(dto);
+		
+	}
 	//테스트용
 	@RequestMapping(value = "/test1", method = {RequestMethod.GET})
 	public List<RecipeDto> test1() {

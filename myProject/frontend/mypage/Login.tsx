@@ -15,10 +15,8 @@ import { GoogleSignin, GoogleSigninButton } from "@react-native-google-signin/go
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loggedUserkey } from "../store/login";
 
-
 export default function Login() {
     const navigation = useNavigation()
-    const drawerOpen = useCallback(() => {navigation.dispatch(DrawerActions.openDrawer())}, [])
     
     // 로그인 훅
     // 카카오 아이디
@@ -34,9 +32,7 @@ export default function Login() {
     useEffect(() => {
         GoogleSignin.configure()
         console.log(`GoogleSignin.configure(): ${GoogleSignin.configure()}`)
-    }, [])
-    
-    let userInfo:string[]
+    })
 
     const goShoppingCart = useCallback(() => {
         dispatch(D.drawerChangeFalseAction())
@@ -47,13 +43,11 @@ export default function Login() {
         navigation.dispatch(DrawerActions.openDrawer())
     },[])
 
-    const googleSignIn= async() => {    // 구글 로그인하기.
+    const googleSignIn= useCallback(async() => {    // 구글 로그인하기.
+        try{
         await GoogleSignin.hasPlayServices()
         const userInfo = await GoogleSignin.signIn()
-        const userGender = await GoogleSignin.addScopes({scopes:['https://www.googleapis.com/auth/user.gender.read']})
         console.log(userInfo)
-        setMemberId(userInfo.user.id)
-        setMemberNickname(userInfo.user.name)
         axios.post(config.address + "regist", null, 
             {
                 params: {
@@ -64,6 +58,8 @@ export default function Login() {
                 if(response.data == memberId) {
                     console.log("로그인 및 회원가입 되었습니다.")
                     setPassword("")
+                    setMemberId(userInfo.user.id)
+                    setMemberNickname(userInfo.user.name)
                     dispatch(L.loginAction({ 
                         memberId: response.data.memberId, 
                         memberNickname: response.data.memberNickname,
@@ -76,13 +72,16 @@ export default function Login() {
                         memberMainAddr: response.data.memberMainAddr,
                         memberDetailAddr: response.data.memberDetailAddr,
                         memberZipcode: response.data.Zipcode,
-                        memberThumbnail: userInfo.user.photo
+                        memberThumbnail: userInfo.user.photo,
+                        idSeq:2
                     }))
-                } else if(response.data = '') {
+                } else if(response.data == '') {
                     console.log("실패")
                 } else {
                     console.log("로그인 되었습니다.")
                     setPassword("")
+                    setMemberId(userInfo.user.id)
+                    setMemberNickname(userInfo.user.name)
                     dispatch(L.loginAction({ 
                         memberId: response.data.memberId, 
                         memberNickname: response.data.memberNickname,
@@ -95,11 +94,14 @@ export default function Login() {
                         memberMainAddr: response.data.memberMainAddr,
                         memberDetailAddr: response.data.memberDetailAddr,
                         memberZipcode: response.data.Zipcode,
-                        memberThumbnail: userInfo.user.photo
+                        memberThumbnail: userInfo.user.photo,
+                        idSeq:2
                     }))
                 }
             }).catch((err:Error) => {})
-    }
+        }catch(err) {err}
+        
+    },[memberId, memberNickname])
 
     const googleSignOut = useCallback(async () => { // 구글 로그아웃
         try {
@@ -111,7 +113,7 @@ export default function Login() {
     const signInWithKakao = useCallback(async (): Promise<void> => {    //카카오 로그인
         const token: KakaoOAuthToken = await login();
         console.log("token: " + JSON.stringify(token))
-        userInfo= (await getProfile()).split(" ")
+        const userInfo= (await getProfile()).split(" ")
         console.log("userInfo: " + userInfo)
         
         axios.post(config.address + "regist", null, 
@@ -121,13 +123,12 @@ export default function Login() {
                     memberNickname: userInfo[1],
                     memberEmail: userInfo[2],
                     memberGender: userInfo[3]
-                }
+            }
             }).then((response) => {
+                console.log("response: " + JSON.stringify(response.data))
+
                 if(response.data.memberId == memberId) {
                     console.log("로그인 및 회원가입 되었습니다.")
-                    setPassword("")
-                    setMemberId(userInfo[0])
-                    setMemberNickname(userInfo[1])
                     
                     dispatch(L.loginAction({ 
                         memberId: response.data.memberId, 
@@ -141,16 +142,14 @@ export default function Login() {
                         memberMainAddr: response.data.memberMainAddr,
                         memberDetailAddr: response.data.memberDetailAddr,
                         memberZipcode: response.data.memberZipcode,
-                        memberThumbnail: userInfo[4]
+                        memberThumbnail: userInfo[4],
+                        idSeq:1
                     }))
-                } else if(response.data = '') {
+                } else if(response.data == '') {
                     console.log("실패")
                 } else {
                     console.log("로그인 되었습니다.")
-                    setPassword("")
-                    setMemberId(userInfo[0])
-                    setMemberNickname(userInfo[1])
-                    
+                    console.log("카카오로그인 받은 값: " + JSON.stringify(response.data))
                     dispatch(L.loginAction({ 
                         memberId: response.data.memberId, 
                         memberNickname: response.data.memberNickname,
@@ -163,12 +162,13 @@ export default function Login() {
                         memberMainAddr: response.data.memberMainAddr,
                         memberDetailAddr: response.data.memberDetailAddr,
                         memberZipcode: response.data.memberZipcode,
-                        memberThumbnail: userInfo[4]
+                        memberThumbnail: userInfo[4],
+                        idSeq:1
                     }))
                 }
             }).catch((err:Error) => console.log(err.message))
             
-        }, [memberId, memberNickname])
+        },[memberId,memberNickname])
 
     const userLogin = () => {   // 일반 로그인
         console.log('userLogin')
@@ -178,27 +178,33 @@ export default function Login() {
         }
 
         axios.post(config.address + "login", null, 
-        {
-            params: {
-                memberId: memberId,
-                memberPwd: password
-        }
-        }).then((response) => {
+            {
+                params: {
+                    memberId: memberId,
+                    memberPwd: password
+            }
+            }).then((response) => {
             
-            if(response.data.memberId == memberId) {
-                console.log("로그인 되었습니다.")
-                dispatch(L.signUpAction({   
-                        memberId: response.data.memberId, 
-                        memberNickname: response.data.memberNickname,
-                        memberEmail: response.data.memberEmail,
-                        memberPhone: response.data.memberPhone,
-                        memberName: response.data.memberName,
-                        memberCoin: response.data.memberCoin,
-                        memberGender: response.data.memberGender,
-                        memberGrade: response.data.memberGrade,
-                        memberMainAddr: response.data.memberMainAddr,
-                        memberDetailAddr: response.data.memberDetailAddr
-                }))
+                if(response.data.memberId == memberId) {
+                    console.log("로그인 되었습니다.")
+                    AsyncStorage.getItem('thumbnail').then((value)=> {
+                        console.log("thumbnail: "+ value)
+                        dispatch(L.signUpAction({   
+                            memberId: response.data.memberId, 
+                            memberNickname: response.data.memberNickname,
+                            memberEmail: response.data.memberEmail,
+                            memberPhone: response.data.memberPhone,
+                            memberName: response.data.memberName,
+                            memberCoin: response.data.memberCoin,
+                            memberGender: response.data.memberGender,
+                            memberGrade: response.data.memberGrade,
+                            memberMainAddr: response.data.memberMainAddr,
+                            memberDetailAddr: response.data.memberDetailAddr,
+                            memberZipcode: response.data.memberZipcode,
+                            memberThumbnail: value,
+                            idSeq: 3
+                        }))
+                    })
                 
             } 
         }).catch((err:Error) => console.log(err.message))

@@ -1,14 +1,14 @@
-import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import React, { useCallback, useState } from "react";
-import { Alert, Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import { Alert, Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Colors, RadioButton } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch } from "react-redux";
 import * as L from '../../store/login'
 import { NavigationHeader } from "../../theme";
 import config from "../../project.config"
-import { checkIdRule, checkPasswordRule } from "../utils";
+import {  checkEmailRule, checkIdRule, checkPasswordRule } from "../utils";
 
 
 /* 
@@ -22,12 +22,12 @@ npm i react-native-webview
 
 export default function MyAccount() {
 
-    const drawerOpen = useCallback(() => {navigation.dispatch(DrawerActions.openDrawer())}, [])
     const goBack = useCallback(() => navigation.canGoBack() && navigation.goBack(), [])
     const [memberId, setMemberId] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState(password)
     const [memberNickname, setMemberNickname] = useState('')
+    const [memberEmail, setMemberEmail] = useState('')
     const [msg, setMsg] = useState('')
     const [checked, setChecked] = useState("남자")
 
@@ -45,7 +45,10 @@ export default function MyAccount() {
             memberGender: response.memberGender,
             memberGrade: response.memberGrade,
             memberMainAddr: response.memberMainAddr,
-            memberDetailAddr: response.memberDetailAddr
+            memberDetailAddr: response.memberDetailAddr,
+            memberThumbnail: '',
+            memberZipcode: 0,
+            idSeq:3
         }))
         navigation.navigate('Login')
       }, [memberId, memberNickname, password, confirmPassword])
@@ -85,7 +88,8 @@ export default function MyAccount() {
             console.log(`memberId: ` + memberId + " password: " + password)
             const chkPassword = checkPasswordRule(password) // 비밀번호 정규식
             const chkId = checkIdRule(memberId) // 아이디 정규식
-            if(chkPassword && chkId) {
+            const checkEmail = checkEmailRule(memberEmail)
+            if(chkPassword && chkId && checkEmail) {
                 axios.post(config.address + "regist", null, 
                 {
                 params: {
@@ -109,9 +113,12 @@ export default function MyAccount() {
                 }).catch((err:Error) => {
                     console.log(err)
                 })
-            } else {
-                return Alert.alert("8자리 이상, 영문(소문자/대문자), 숫자, 특수문자 모두 포함해야 합니다.")
-            }
+            } 
+            else if(!chkPassword) return Alert.alert("8자리 이상, 영문(소문자/대문자), 숫자, 특수문자 모두 포함해야 합니다.")
+            else if(!chkId) return Alert.alert("아이디는 6자리 포함되어야 하고 영문자가 포함되어야 합니다.")
+            else if(!checkEmail) return Alert.alert("이메일 형식에 맞지 않습니다.")
+            
+            
             
         }
     }
@@ -141,7 +148,7 @@ export default function MyAccount() {
                             <View>
                                 <Text style={{fontSize:17}}>{msg}</Text>
                             </View>
-                            <Pressable style={{borderWidth:0.3, padding:5}} onPress={() => idCheck()}>
+                            <Pressable style={{borderWidth:1, padding:5}} onPress={() => idCheck()}>
                                 <Text>Id 중복 확인</Text>
                             </Pressable>
                         </View>
@@ -191,6 +198,15 @@ export default function MyAccount() {
                                 onChangeText={(memberNickname) => setMemberNickname(memberNickname)}
                             />
                         </View>
+                        <View style={[styles.textInput]}>
+                            <TextInput 
+                                placeholder="이메일 주소"
+                                value={memberEmail}
+                                placeholderTextColor='#003f5c'
+                                underlineColorAndroid='transparent'
+                                onChangeText={(memberEmail) => setMemberEmail(memberEmail)}
+                            />
+                        </View>
                         <TouchableOpacity style={styles.accountBtn} onPress={() => {
                             
                                 if(msg == '') {
@@ -219,7 +235,7 @@ const styles = StyleSheet.create ({
         justifyContent: 'center'
     },
     topBar: {
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderRadius:1
     },
     contentView: {
@@ -245,11 +261,11 @@ const styles = StyleSheet.create ({
         backgroundColor: Colors.amber300,
         justifyContent: "center",
         alignItems: "center",
-        borderWidth:0.3,
+        borderWidth:1,
         marginTop:10
     },
     textInput: {
-        borderWidth: 0.3,
+        borderWidth: 1,
         width: '70%',
         margin:10
 
