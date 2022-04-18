@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Chef</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" defer src="js/detail/search.js"></script> <!-- defer(외부 참조용 연동 필수)-->
+    <script src="https://kit.fontawesome.com/7a52739f2b.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/project.config.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/commons.js" charset="utf-8"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+</head>
+<body>
+    <nav id="navBar" class="navbar-white">
+        <a href="index.html"><img src="images/logo2.png" class="logo"></a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="simple">홈</a></li>
+            <li><a href="listing.html?category=personal">개인용</a></li>
+            <li><a href="listing.html?category=entertain">접대용</a></li>
+            <li><a href="listing.html?category=nightmeal">야식용</a></li>
+        </ul>
+        <a href="login.html" class="register-btn" id="loginBtn" onclick="logout()">로그인</a>
+        <i class="fas fa-bars" onclick="togglebtn()"></i>
+    </nav>
+
+    <div class="container">
+
+        <div class="list-container">
+            <div class="left-col" id="left-col">   
+            </div>  
+        </div>
+
+        <div class="footer">
+            <hr>
+            <p> Copyright By 2022, 레시피를 부탁해</p>
+        </div>
+
+    </div>
+
+</body>
+</html>

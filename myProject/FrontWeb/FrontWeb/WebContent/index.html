@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Chef</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" defer src="js/index/index.js"></script> <!-- defer(외부 참조용 연동 필수)-->
+    <script src="https://kit.fontawesome.com/7a52739f2b.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/project.config.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/commons.js" charset="utf-8"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+</head>
+<body>
+
+    <div class="header">
+        <nav id="navBar">
+            <a href="index.html"><img src="images/logo.png" class="logo"></a> <!--이거 나중에 jsp 작업할때 수정 하세요-->
+            <ul class="nav-links">
+                <li><a href="#" class="simple">홈</a></li>
+                <li><a href="listing.html?category=personal">개인용</a></li>
+                <li><a href="listing.html?category=entertain">접대용</a></li>
+                <li><a href="listing.html?category=nightmeal">야식용</a></li>
+                <li><a href="profilePage.html" id="settingBtn">개인설정</a></li>
+            </ul>
+            <a href="login.html" class="register-btn" id="loginBtn" onclick="logout()">로그인</a>
+            
+            <i class="fa-solid fa-bars" onclick="togglebtn()"></i>
+        </nav>
+        <div class="container">
+            <h1>먹을거 고민은 이제 그만~</h1>
+            <div class="search-bar">
+                <form>
+                    <div class="meat-input">
+                        <label>레시피 검색</label>
+                        <input id="searchInput" type="text" placeholder="검색어를 입력해주세요">
+                    </div>
+                    <button onclick="search()" type="button"><img src="images/search.png"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="sub-title">축산물 추천 레시피</h2>
+        <div class="latest" id="recommendLivestock">
+        </div>
+
+        <h2 class="sub-title">해산물 추천 레시피</h2>
+        <div class="latest" id="recommendSeafood">
+        </div>
+
+        <h2 class="sub-title">조회순 추천 레시피</h2>
+        <div class="latest" id="recommendReadcount">
+        </div>
+
+        <div class="etc">
+            <h3>요리 지식을 <br>나누어 보세요</h3>
+            <p>당신도 어느새 전문적인 <br>요리연구가 가 될 수 있습니다.</p>
+            <a href="#" class="etc-btn">정보가 더 필요 한가요?</a>
+        </div>
+
+        <h2 class="sub-title">굿즈</h2>
+
+        <div class="goods">
+            <div>
+            <img src="images/pots.jpg">
+            <p>현존 하는 냄비중 가장 땐땐합니다.</p>
+            </div>
+            <div>
+            <img src="images/plates.jpg">
+            <p>도마중에 아주 위생적입니다.</p>
+            </div>
+            <div>
+            <img src="images/pans.jpg">
+            <p>말안들을때 무기로 사용하기 아주 적합합니다.</p>
+            </div>
+        </div>
+
+        <a href="#" class="start-btn">당신의 능력을 보여 주세요</a>
+
+        <div class="about-msg">
+           <!-- <h2>레시피를 부탁해 관하여</h2>
+                <p>● 기획의도(목적) <br>
+                    - 자신만의 레시피를 다른 사람들과 공유하고 더 나아가 수익을 창출할 수 있는 앱을 만들어 보기위해 기획 <br>
+                    
+                    ● 주요분석 내용 추론    <br>
+                    - 사용자들이 자유롭게 자신들만의 레시피를 공유    <br>
+                    - 우수 업로더를 선정하여 리워드를 부여하고 레시피를 유료화할 수 있게 하여 수익 창출의 기회를 제공 <br>
+                    - 앱 이용자들이 사용하고 있는 주방 도구들을 함께 살펴볼 수 있음   <br>           
+                    
+                    ● 기대 효과   <br>
+                    - 우수 업로더들에게 보상 제공으로 이용자들의 참여 독려  <br>
+                    - 평가와 추천 기능으로 이용자들의 앱 사용 증대<br> 
+                </p>-->
+        </div>
+
+        <div class="footer">
+            <a href ="https://facebook.com/"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href ="https://youtube.com/"><i class="fa-brands fa-youtube"></i></a>
+            <a href ="https://google.com/"><i class="fa-brands fa-google"></i></a>
+            <a href ="https://linkedin.com/"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href ="https://instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+            <hr>
+            <p> Copyright By 2022, 레시피를 부탁해</p>
+        </div>
+
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <title>로그인 페이지 입니다.</title>
+        <link rel="stylesheet" href="css/login.css">
+        <script type="text/javascript" defer src="js/login.js"></script> <!-- defer(외부 참조용 연동 필수)-->
+        <script type="text/javascript" defer src="js/login2.js"></script> <!-- defer(외부 참조용 연동 필수 & 카카오)-->
+        <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="js/project.config.js" charset="utf-8"></script>
+        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    </head>
+
+    <body>
+        <div class="hero">
+            <div class="form-box">
+                <div class="button-box">
+                    <div id="btn"></div>
+                    <button type="button" class="toggle-btn" onclick="login()">로그인</button>
+                    <button type="button" class="toggle-btn" onclick="register()">회원가입</button>
+                </div>
+
+                <div class="social-icons">
+                    <a href="javascript:kakaoLogin();"><img src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png"  style="height: 60px; width: auto;"/></a>
+                </div>
+
+                <form id="login" class="input-group"  method="post">
+                    
+                    <input type="text" class="input-field" name="memberId" placeholder="아이디 입력" required>
+                    <input type="password" class="input-field" name="memberPwd" placeholder="패스워드 입력" required>
+                    <input type="checkbox" class="check-box"><span>암호 기억하기</span>
+                    <button type="button" class="submit-btn" onclick="doLogin()">로그인</button>
+                </form>
+
+                <form id="register" class="input-group"  method="post">
+                    <input type="text" class="input-field" name="memberId" id="registId" placeholder="아이디 입력" required>
+                    <!-- <input type="email" class="input-field" placeholder="이메일 입력" required> -->
+                    <input type="password" class="input-field" name="memberPwd" placeholder="패스워드 입력" required>
+                    <input type="text" class="input-field" name="memberNickname" placeholder="닉네임 입력" required>
+                    <input type="checkbox" class="check-box"><span>위 사항에 동의합니다.</span>
+                    <button type="button" class="submit-btn" onclick="doRegist()">로그인</button>
+                </form>
+            </div>
+            
+        </div>
+
+        
+
+    </body>
+
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Chef</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" defer src="js/detail/goodsList.js"></script> <!-- defer(외부 참조용 연동 필수)-->
+    <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7a52739f2b.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/project.config.js" charset="utf-8"></script>
+</head>
+<body>
+    <nav id="navBar" class="navbar-white">
+        <a href="index.html"><img src="images/logo2.png" class="logo"></a> <!--이거 나중에 jsp 작업할때 수정 하세요-->
+        <ul class="nav-links">
+            <li><a href="index.html" class="simple">홈</a></li>
+            <li><a href="listing.html?category=personal">개인용</a></li>
+            <li><a href="listing.html?category=entertain">접대용</a></li>
+            <li><a href="listing.html?category=nightmeal">야식용</a></li>
+            <li><a href="profilePage.html" id="settingBtn">개인설정</a></li>
+        </ul>
+        <a href="#" class="register-btn">회원 가입하기</a>
+        <i class="fas fa-bars" onclick="togglebtn()"></i>
+    </nav>
+
+    <div class="container">
+
+        <div class="list-container single-product">
+            <div class="left-col">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="images/kichen1.jpg" width="100%" id="productImg" class="big">
+    
+                        <div class="small-img-row">
+                            <div class="small-img-col">
+                                <img src="images/kichen1.jpg" width="100%" class="smallImg">
+                            </div>
+                            <div class="small-img-col">
+                                <img src="images/kichen2.jpg" width="100%" class="smallImg">
+                            </div>
+                            <div class="small-img-col">
+                                <img src="images/kichen3.jpg" width="100%" class="smallImg">
+                            </div>
+                            <div class="small-img-col">
+                                <img src="images/kichen4.jpg" width="100%" class="smallImg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-2">
+                        <p>주방 도구 / 도마</p>
+                        <h1>나무가 아주 좋습니다.</h1>
+                        <h4>35,000원</h4>
+                        <select>
+                            <option>크기를 고르세요</option>
+                            <option>대</option>
+                            <option>중</option>
+                            <option>소</option>
+                        </select>
+                        <input type="number" value="1">
+                        <a href="" class="btn">카트에 추가하기</a>
+                        <br>
+                        <h3>Product Details <i class="fa-solid fa-indent"></i></h3>
+                        <p>이 도마는 친환경적 제작으로 호르몬발생이 적으며 더군다나 멸균처리로 된 나무로 가공되어 참 좋습니다.</p>
+                    </div>
+                </div>
+            </div>
+                
+            
+        </div>
+
+        
+
+        <div class="footer">
+            <a href ="https://facebook.com/"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href ="https://youtube.com/"><i class="fa-brands fa-youtube"></i></a>
+            <a href ="https://google.com/"><i class="fa-brands fa-google"></i></a>
+            <a href ="https://linkedin.com/"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href ="https://instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+            <hr>
+            <p> Copyright By 2022, 레시피를 부탁해</p>
+        </div>
+
+    </div>
+
+    
+</body>
+</html>
