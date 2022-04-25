@@ -17,6 +17,7 @@ import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {Alert} from 'react-native';
 import orderSlice from './src/slices/order';
+import usePermissions from './src/hooks/usePermissions';
 
 export type LoggedInParamList = {
   Orders: undefined;
@@ -42,6 +43,8 @@ function AppInner() {
   // 'userInfo', {name:'zerocho', birth: 1994}
   // 'order', {orderId: '1312s', price: 9000, latitude: 37.5, longitude: 127.5}
   // 앱 실행 시 토큰 있으면 로그인하는 코드
+
+  usePermissions();
 
   useEffect(() => {
     axios.interceptors.response.use(
