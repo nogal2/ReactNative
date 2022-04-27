@@ -1,87 +1,106 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Dimensions, Image, PermissionsAndroid, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { FlatList, ScrollView, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  Dimensions,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {default as Icons } from 'react-native-vector-icons/MaterialCommunityIcons';
+import {default as Icons} from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import COLORS from '../consts/colors';
 import categories from '../consts/categories';
 import foods from '../consts/foods';
 
-import { NavigationHeader } from '../theme';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { getProfile } from '../mypage/utils';
+import {NavigationHeader} from '../theme';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
+import {getProfile} from '../mypage/utils';
 import axios from 'axios';
-import config from '../project.config'
-import { useDispatch } from 'react-redux';
-import * as D from "../store/drawer"
+import config from '../project.config';
+import {useDispatch} from 'react-redux';
+import * as D from '../store/drawer';
 
-
-const {width} = Dimensions.get('screen'); //스크린 
+const {width} = Dimensions.get('screen'); //스크린
 const cardWidth = width / 2 - 20; //카드값 길이시 2개에서 부터 20개까지 설정
 
 const categoryTrans = {
-  livestock:"축산물",
-  seafood:"해산물",
-  personal:"개인용",
-  entertain:"접대용",
-  nightmeal:"야식용"
-}
+  livestock: '축산물',
+  seafood: '해산물',
+  personal: '개인용',
+  entertain: '접대용',
+  nightmeal: '야식용',
+};
 
 const HomeScreen = () => {
-  const navigation = useNavigation()
-  const goBack = useCallback(() => navigation.canGoBack() && navigation.goBack(), [])
+  const navigation = useNavigation();
+  const goBack = useCallback(
+    () => navigation.canGoBack() && navigation.goBack(),
+    [],
+  );
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const goShoppingCart = () => {
-      dispatch(D.drawerChangeFalseAction())
-      navigation.dispatch(DrawerActions.openDrawer())
-  }
+    dispatch(D.drawerChangeFalseAction());
+    navigation.dispatch(DrawerActions.openDrawer());
+  };
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0); //훅 설정
-  const [recipies, setRecipies] = useState([])
+  const [recipies, setRecipies] = useState([]);
 
-  const fetchRecipe = async(category:string) =>{
-    const recipeRes =await axios.get(config.address + "getRecommendRecipeByCategory?category=" + category)
-    setRecipies(recipeRes.data)
-  }
+  const fetchRecipe = async (category: string) => {
+    const recipeRes = await axios.get(
+      config.address + 'getRecommendRecipeByCategory?category=' + category,
+    );
+    setRecipies(recipeRes.data);
+  };
 
-     
-  const permission = async() => {
-    if (Platform.OS === "android") {
-        await PermissionsAndroid.requestMultiple([
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        ]).then((result)=>{
-            if (result['android.permission.CAMERA']
-            && result['android.permission.WRITE_EXTERNAL_STORAGE']
-            && result['android.permission.READ_EXTERNAL_STORAGE']
-            === 'granted') {
-                console.log("모든 권한 획득");
-            } else{
-                console.log("권한거절");
-            }
-        })
-    }else{
+  const permission = async () => {
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      ]).then(result => {
+        if (
+          result['android.permission.CAMERA'] &&
+          result['android.permission.WRITE_EXTERNAL_STORAGE'] &&
+          result['android.permission.READ_EXTERNAL_STORAGE'] === 'granted'
+        ) {
+          console.log('모든 권한 획득');
+        } else {
+          console.log('권한거절');
+        }
+      });
+    } else {
     }
-}
+  };
 
+  useEffect(() => {
+    permission();
+  }, []);
 
-useEffect( () => {
-    permission()
-}, [])
+  useEffect(() => {
+    const fetchRecipe = async (category: string) => {
+      const recipeRes = await axios.get(
+        config.address + 'getRecommendRecipeByCategory?category=' + category,
+      );
+      setRecipies(recipeRes.data);
+    };
+    fetchRecipe('rating');
+  }, []);
 
-  
-
-  useEffect( () => {
-    const fetchRecipe = async(category:string) =>{
-        const recipeRes =await axios.get(config.address + "getRecommendRecipeByCategory?category=" + category)
-        setRecipies(recipeRes.data)          
-    }
-    fetchRecipe("rating")
-}, [])
-
-  const ListCategories = () => { //리스트 카테고리 함수
+  const ListCategories = () => {
+    //리스트 카테고리 함수
     return (
       <ScrollView
         horizontal
@@ -92,8 +111,8 @@ useEffect( () => {
             key={index}
             activeOpacity={0.8}
             onPress={() => {
-              setSelectedCategoryIndex(index)
-              fetchRecipe(category.value)
+              setSelectedCategoryIndex(index);
+              fetchRecipe(category.value);
             }}>
             <View
               style={{
@@ -128,27 +147,36 @@ useEffect( () => {
     );
   };
 
-  const Card = ({food}:any) => {
+  const Card = ({food}: any) => {
     return (
-      <TouchableHighlight//사진 및 디테일 설정
+      <TouchableHighlight //사진 및 디테일 설정
         underlayColor={COLORS.white}
         activeOpacity={0.9}
         onPress={() => {
-          navigation.navigate('RecipeNavigator'  as never, { 
-            screen: 'RecipeDetail',
-            params:{
-              seq:food.recipeSeq, 
-              category: 'recipe'
-            }
-        }  as never)}}>
+          navigation.navigate(
+            'RecipeNavigator' as never,
+            {
+              screen: 'RecipeDetail',
+              params: {
+                seq: food.recipeSeq,
+                category: 'recipe',
+              },
+            } as never,
+          );
+        }}>
         <View style={style.card}>
           <View style={{alignItems: 'center', top: -40}}>
-            <Image source={{uri: config.photo + food.recipeThumbnail}} style={{height: 120, width: 120}} />
+            <Image
+              source={{uri: config.photo + food.recipeThumbnail}}
+              style={{height: 120, width: 120}}
+            />
           </View>
           <View style={{marginHorizontal: 20}}>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>{food.recipeTitle}</Text>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+              {food.recipeTitle}
+            </Text>
             <Text style={{fontSize: 14, color: COLORS.grey, marginTop: 2}}>
-              {food.recipeCapacity + "인용"}
+              {food.recipeCapacity + '인용'}
             </Text>
           </View>
           <View //+ 기호 삭제 + $삭제
@@ -160,19 +188,24 @@ useEffect( () => {
             }}>
             <Text style={{fontSize: 18, fontWeight: 'bold'}}>
               {/* {food.recipeBigCategory / food.recipeBigCategory} */}
-              {categoryTrans[food['recipeBigCategory'] as never ] } / {categoryTrans[food['recipeSmallCategory'] as never]}
+              {categoryTrans[food['recipeBigCategory'] as never]} /{' '}
+              {categoryTrans[food['recipeSmallCategory'] as never]}
             </Text>
           </View>
         </View>
       </TouchableHighlight>
     );
   };
-  return (//최상단 부분에 글귀 타이틀 + 사진 처리
+  return (
+    //최상단 부분에 글귀 타이틀 + 사진 처리
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
-      <NavigationHeader title="홈" 
-        Left= {() => <Icons name="arrow-left-bold" size={40} onPress={goBack} />}
-        Right= {() => <Icons name="cart-heart" size={40} onPress={goShoppingCart} />}
-        />
+      <NavigationHeader
+        title="홈"
+        Left={() => <Icons name="arrow-left-bold" size={40} onPress={goBack} />}
+        Right={() => (
+          <Icons name="cart-heart" size={40} onPress={goShoppingCart} />
+        )}
+      />
 
       <View style={style.header}>
         <View>
@@ -191,13 +224,12 @@ useEffect( () => {
           style={{height: 50, width: 50, borderRadius: 25}}
         />
       </View>
-      <View 
+      <View
         style={{
           marginTop: 40,
           flexDirection: 'row',
           paddingHorizontal: 20,
-        }}>
-      </View>
+        }}></View>
       <View>
         <ListCategories />
       </View>
