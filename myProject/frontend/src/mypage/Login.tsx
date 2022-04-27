@@ -3,11 +3,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Image,
-  SafeAreaView,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {NavigationHeader} from '../theme';
@@ -242,80 +241,76 @@ export default function Login() {
       })
       .catch((err: Error) => console.log(err.message));
   };
-
+  const canGoNext = memberId && password;
   if (!loggedIn) {
     // 로그아웃 상태일 때
     return (
       <DismissKeyboardView>
-        <View style={[styles.topBar]}>
-          <NavigationHeader
-            title="홈"
-            Left={() => (
-              <Icon name="text-account" size={40} onPress={goSetting} />
-            )}
-            Right={() => (
-              <Icon name="cart-heart" size={40} onPress={goShoppingCart} />
-            )}
-          />
-        </View>
+        {/* 아이디 입력 */}
+        <View style={[]}>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="아이디를 입력해 주세요"
+              placeholderTextColor="#003f5c"
+              returnKeyType="next"
+              onChangeText={memberId => setMemberId(memberId)}
+            />
+          </View>
 
-        <View style={[styles.contentView]}>
-          {/* 아이디 입력 */}
-          <View style={[styles.contentBox]}>
-            <View style={[styles.content]}>
-              <TextInput
-                style={{alignItems: 'flex-start'}}
-                placeholder="id를 입력해 주세요"
-                placeholderTextColor="#003f5c"
-                returnKeyType="next"
-                onChangeText={memberId => setMemberId(memberId)}
+          {/* 패스워드 입력 */}
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="패스워드를 입력해 주세요"
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+              returnKeyType="send"
+              onChangeText={password => setPassword(password)}
+            />
+          </View>
+
+          {/* 로그인 버튼 */}
+          <View style={styles.buttonZone}>
+            <Pressable
+              style={
+                canGoNext
+                  ? StyleSheet.compose(
+                      styles.loginButton,
+                      styles.loginButtonActive,
+                    )
+                  : styles.loginButton
+              }
+              onPress={() => userLogin()}>
+              <Text>로그인</Text>
+            </Pressable>
+          </View>
+          <View>
+            <Pressable
+              style={{alignItems: 'center'}}
+              onPress={() => signInWithKakao()}>
+              <Image
+                source={require('./utils/kakao_login_medium_narrow.png')}
               />
-            </View>
+            </Pressable>
+          </View>
+          {/* 구글 로그인 버튼 */}
+          <Pressable style={{alignItems: 'center'}}>
+            <GoogleSigninButton
+              style={{marginTop: 10, width: 192, height: 48}}
+              size={GoogleSigninButton.Size.Standard}
+              color={GoogleSigninButton.Color.Light}
+              onPress={googleSignIn}
+            />
+          </Pressable>
 
-            {/* 패스워드 입력 */}
-            <View style={[styles.content]}>
-              <TextInput
-                placeholder="패스워드를 입력해 주세요"
-                placeholderTextColor="#003f5c"
-                secureTextEntry={true}
-                returnKeyType="send"
-                onChangeText={password => setPassword(password)}
-              />
-            </View>
-
-            {/* 로그인 버튼 */}
-            <View style={[styles.loginBox]}>
-              <TouchableOpacity
-                style={[styles.loginBtn]}
-                onPress={() => userLogin()}>
-                <Text>로그인</Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity onPress={() => signInWithKakao()}>
-                <Image
-                  source={require('./utils/kakao_login_medium_narrow.png')}
-                />
-              </TouchableOpacity>
-            </View>
-            {/* 구글 로그인 버튼 */}
-            <TouchableOpacity>
-              <GoogleSigninButton
-                style={{marginTop: 10, width: 192, height: 48}}
-                size={GoogleSigninButton.Size.Standard}
-                color={GoogleSigninButton.Color.Light}
-                onPress={googleSignIn}
-              />
-            </TouchableOpacity>
-
-            {/* 회원가입 버튼 */}
-            <View style={[styles.loginBox]}>
-              <TouchableOpacity
-                style={[styles.loginBtn]}
-                onPress={() => navigation.navigate('MyAccount')}>
-                <Text>회원가입</Text>
-              </TouchableOpacity>
-            </View>
+          {/* 회원가입 버튼 */}
+          <View style={styles.buttonZone}>
+            <Pressable
+              style={styles.loginButton}
+              onPress={() => navigation.navigate('MyAccount')}>
+              <Text>회원가입</Text>
+            </Pressable>
           </View>
         </View>
       </DismissKeyboardView>
@@ -323,8 +318,8 @@ export default function Login() {
   } else {
     // 로그인 상태일 때
     return (
-      <SafeAreaView style={[styles.container]}>
-        <View style={[styles.topBar]}>
+      <DismissKeyboardView>
+        <View style={[]}>
           <NavigationHeader
             title="홈"
             Left={() => (
@@ -335,12 +330,12 @@ export default function Login() {
             )}
           />
         </View>
-        <View style={[styles.contentView]}>
+        <View style={[]}>
           <Text>마이페이지</Text>
-          <View style={[styles.contentBox]}>
+          <View style={[]}>
             <View>
-              <TouchableOpacity
-                style={[styles.content]}
+              <Pressable
+                style={[]}
                 onPress={() => {
                   dispatch(L.logoutAction());
                   signOutWithKakao();
@@ -351,81 +346,61 @@ export default function Login() {
                   navigation.navigate('Login');
                 }}>
                 <Text>로그아웃</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <View>
-              <TouchableOpacity
-                style={[styles.content]}
+              <Pressable
+                style={[]}
                 onPress={() => navigation.navigate('MyFavoriteRecipe')}>
                 <Text>즐겨찾기</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <View>
-              <TouchableOpacity
-                style={[styles.content]}
+              <Pressable
+                style={[]}
                 onPress={() => navigation.navigate('MyInfo')}>
                 <Text>내 정보</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <View>
-              <TouchableOpacity
-                style={[styles.content]}
+              <Pressable
+                style={[]}
                 onPress={() => navigation.navigate('MyUploadedRecipe')}>
                 <Text>내가 쓴 레시피</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <View>
-              <TouchableOpacity
-                style={[styles.content]}
+              <Pressable
+                style={[]}
                 onPress={() => navigation.navigate('RecipeUpload')}>
                 <Text>레시피 업로드</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
         </View>
-      </SafeAreaView>
+      </DismissKeyboardView>
     );
   }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  textInput: {
+    padding: 5,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  topBar: {
-    flex: 1,
-    borderWidth: 1,
-    borderRadius: 1,
+  inputWrapper: {
+    padding: 20,
   },
-  contentView: {
-    flex: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  contentBox: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    borderWidth: 1,
-    borderRadius: 10,
-    width: 200,
-    marginTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loginBox: {
-    borderWidth: 1,
-    borderRadius: 10,
-    width: 100,
-    marginTop: 10,
+  loginButton: {
+    backgroundColor: 'gray',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
     marginBottom: 10,
   },
-  loginBtn: {
+  loginButtonActive: {
+    backgroundColor: 'blue',
+  },
+  buttonZone: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 5,
-    marginTop: 5,
   },
 });
