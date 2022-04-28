@@ -20,7 +20,8 @@
 Frontend: screens(Navigation 구성), mypage, OnboardScreen(자동 로그인), store(Redux) 
 backend: membersController, membersService, member.xml 구현
 
-코멘트
-Drawer, Tab, Stack 컴포넌트간 이동 구성
-
-```
+**Drawer, Tab, Stack 컴포넌트간 이동 구성**
+-	Drawer, Tab, Stack 을 통해 컴포넌트간 이동을 자유롭게 할 수 있도록 구성하고, Redux를 통해 데이터 전달을 편하게 할 수 있도록 구현하였습니다. Drawer는 로그인이 되었을 때와 안 되었을 때를 다르게 보이도록 구현했습니다.
+-	일반 로그인을(앱 내에서 회원가입)한 유저는 썸네일을 업로드할 수 있도록 구현하였습니다. 구현을 하면서 썸네일 관리를 어떻게 해야할 지에 대해 고민하다가, 썸네일 등록을 할 때 스토리지에 저장을 해 놓고, 자동 로그인이 될 때 불러와서 유지되도록 한 후, 로그아웃을 한다면 세션을 다 지우는 형태로 관리하였습니다.
+-	카카오, 구글 로그인 사용자는 API로 가져와서 썸네일이 보여지도록 하였습니다.
+-	내비게이션 바는 내비게이션에서 제공하는 컴포넌트로는 자유도가 많이 떨어진다고 해서, 재사용할 수있는 Navigation header 컴포넌트를 만들어서 활용하도록 하였습니다.
