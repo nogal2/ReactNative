@@ -3,6 +3,10 @@
 ## 시큐어코딩을 적용한 앱 개발자 양성 과정
 
 레시피를 부탁해
+
+**개발한 페이지**
+Frontend: screens(Navigation 구성), mypage, OnboardScreen(자동 로그인), store(Redux) 
+backend: membersController, membersService, member.xml 구현
 ---
 **목적**
   -	코로나로 인해 외식보다는 집에서 밥을 해 먹는 일이 많아졌습니다. 하지만 요리를 해본 적 없는사람은 요리가 쉬운게 아닐거라 생각했습니다. 그래서 자신만의 레시피를 다른 사람들과 공유하고 그에 따른 수익 창출을 통해 레시피 공유를 독려하는 앱을 만들어 보기로 했습니다
@@ -16,9 +20,7 @@
   -	우수 업로더들에게 보상을 제공해서 이용자들의 참여를 독려한다.
   -	평가와 추천 기능으로 이용자들의 앱 사용을 증대시킨다.
 
-**개발한 페이지**
-Frontend: screens(Navigation 구성), mypage, OnboardScreen(자동 로그인), store(Redux) 
-backend: membersController, membersService, member.xml 구현
+
 
 **Drawer, Tab, Stack 컴포넌트간 이동 구성**
 -	Drawer, Tab, Stack 을 통해 컴포넌트간 이동을 자유롭게 할 수 있도록 구성하고, Redux를 통해 데이터 전달을 편하게 할 수 있도록 구현하였습니다. Drawer는 로그인이 되었을 때와 안 되었을 때를 다르게 보이도록 구현했습니다.
