@@ -5,7 +5,7 @@
 레시피를 부탁해
 ---
 
-**개발한 페이지**
+개발한 페이지
 ---
 Frontend: screens(Navigation 구성), mypage, OnboardScreen(자동 로그인), store(Redux)
 backend: membersController, membersService, member.xml 구현
