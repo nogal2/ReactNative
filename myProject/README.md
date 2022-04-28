@@ -9,6 +9,7 @@
 ---
 Frontend: screens(Navigation 구성), mypage, OnboardScreen(자동 로그인), store(Redux)
 backend: membersController, membersService, member.xml 구현
+---
 **목적**
   -	코로나로 인해 외식보다는 집에서 밥을 해 먹는 일이 많아졌습니다. 하지만 요리를 해본 적 없는사람은 요리가 쉬운게 아닐거라 생각했습니다. 그래서 자신만의 레시피를 다른 사람들과 공유하고 그에 따른 수익 창출을 통해 레시피 공유를 독려하는 앱을 만들어 보기로 했습니다
 
