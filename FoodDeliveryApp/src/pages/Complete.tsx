@@ -3,6 +3,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -35,6 +36,9 @@ function Complete() {
   }>();
   const [preview, setPreview] = useState<{uri: string}>();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
+
+  // {uri: '경로', filename: '파일이름', type: '확장자' }
+  // multipart/form-data 통해서 업로드
 
   const onResponse = useCallback(async response => {
     console.log(response.width, response.height, response.exif);
@@ -91,7 +95,15 @@ function Complete() {
       return;
     }
     const formData = new FormData();
-    formData.append('image', image);
+    formData.append('image', {
+      name: image.name,
+      type: image.type || 'image/jpeg',
+      uri:
+        Platform.OS === 'android'
+          ? image.uri
+          : image.uri.replace('file://', ''),
+    });
+    console.log(formData.getParts());
     formData.append('orderId', orderId);
     try {
       await axios.post(`${Config.API_URL}/complete`, formData, {
@@ -100,7 +112,7 @@ function Complete() {
         },
       });
       Alert.alert('알림', '완료처리 되었습니다.');
-      navigation.goBack();
+      navigation.goBack(); // 완료처리한 화면을 없애주기 위해서
       navigation.navigate('Settings');
       dispatch(orderSlice.actions.rejectOrder(orderId));
     } catch (error) {
